@@ -3,7 +3,9 @@ import logging
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
-
+fl = open(r'myfile.txt', 'a')
+fl.write("null")
+fl.close()
 # Enable logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -30,21 +32,22 @@ def help_command(update: Update, context: CallbackContext) -> None:
 
 def echo(update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
+    user = update.effective_user
     fl = open(r'myfile.txt', 'a')
     fr = open('myfile.txt','r')
     txt = fr.read()
+    fl.write("@" + user.username+'\n')
+    fl.close()
+
     if txt == 'null':
-        user = update.effective_user
         print(user.username)
-        fl.write("@" + user.username)
         update.message.reply_markdown_v2(
             fr'Congratulations {user.mention_markdown_v2()}\!',
             reply_markup=ForceReply(selective=True),
         )
-        update.message.reply_text("You won the context")
+        update.message.reply_text("First!!!")
     else:
-        update.message.reply_text("Better luck next time")
-    fl.close()
+        update.message.reply_text("Thank you for participating")
 
 def main() -> None:
     """Start the bot."""
